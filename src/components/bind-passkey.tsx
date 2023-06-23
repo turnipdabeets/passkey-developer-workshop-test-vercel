@@ -10,39 +10,39 @@ const BindPasskey = () => {
     e: React.MouseEvent<HTMLButtonElement>
   ) {
     e.preventDefault();
-    //// --- 1. Create an identity
-    // const BeyondIdentityEmbeddedSdk = await import(
-    //   '../utils/BeyondIdentityEmbeddedSdk'
-    // );
-    // let embedded = new BeyondIdentityEmbeddedSdk.default();
-    // let username = bindPasskeyUsername;
-    // let response = await fetch(
-    //   '/api/beyondidentity/get-credential-binding-link',
-    //   {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //       username: username,
-    //     }),
-    //   }
-    // );
-    // let jsonResponse = await response.json();
-    // if (response.status !== 200 || jsonResponse === null) {
-    //   setBindPasskeyResult(jsonResponse);
-    //   return;
-    // }
-    // let bindingLink = jsonResponse.credential_binding_link;
+    // --- 1. Create an identity
+    const BeyondIdentityEmbeddedSdk = await import(
+      '../utils/BeyondIdentityEmbeddedSdk'
+    );
+    let embedded = new BeyondIdentityEmbeddedSdk.default();
+    let username = bindPasskeyUsername;
+    let response = await fetch(
+      '/api/beyondidentity/get-credential-binding-link',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+        }),
+      }
+    );
+    let jsonResponse = await response.json();
+    if (response.status !== 200 || jsonResponse === null) {
+      setBindPasskeyResult(jsonResponse);
+      return;
+    }
+    let bindingLink = jsonResponse.credential_binding_link;
 
-    //// --- 2. Get credential binding link for identity
-    // if (await embedded.isBindPasskeyUrl(bindingLink)) {
-    //   let result = await embedded.bindPasskey(bindingLink);
-    //   setBindPasskeyResult(result);
-    //   window.postMessage('update-passkeys', '*');
-    // } else {
-    //   setBindPasskeyResult(jsonResponse);
-    // }
+    // --- 2. Get credential binding link for identity
+    if (await embedded.isBindPasskeyUrl(bindingLink)) {
+      let result = await embedded.bindPasskey(bindingLink);
+      setBindPasskeyResult(result);
+      window.postMessage('update-passkeys', '*');
+    } else {
+      setBindPasskeyResult(jsonResponse);
+    }
   }
 
   return (
